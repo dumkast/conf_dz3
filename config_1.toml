@@ -1,0 +1,30 @@
+#Cписок покупок
+username = "Dima"
+budget = 100
+
+#Далее приведены 4 таблицы:
+#vegetables - овощи и их цена
+#fruits - фрукты и их цена
+#drinks - напитки и их цена
+#totals - итоговая сумма и остаток
+
+[vegetables]
+tomatoes = 5
+potatoes = 10
+carrots = 3
+vegetablecost = "#{tomatoes + potatoes + carrots}"
+
+[fruits]
+apples = 4
+bananas = 6
+oranges = 8
+fruitcost = "#{apples + bananas + oranges}"
+
+[drinks]
+water = 6
+juice = 4
+drinkcost = "#{water + juice}"
+
+[totals]
+totalcost = "#{vegetablecost + fruitcost + drinkcost}"
+remainingaftershopping = "#{budget - totalcost}"

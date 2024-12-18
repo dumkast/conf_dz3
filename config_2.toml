@@ -1,0 +1,24 @@
+#Анализ расходов
+username = "Dima"
+totalincome = 3000
+totalsavings = 1500
+
+#Таблица expenses - расходы по категориям
+#Таблица results - расчеты по расходам
+
+[expenses]
+categories = ["Housing", "Food", "Transportation", "Entertainment"]
+
+[expenses.details]
+housing = 1000
+food = 400
+transportation = 200
+entertainment = 150
+
+[results]
+totalexpenses = "#{housing + food + transportation + entertainment}"
+remainingincome = "#{totalincome - totalexpenses}"
+minsavings = "#{min(totalsavings, remainingincome)}"
+monthstosave = "#{(totalsavings - minsavings) / minsavings}"
+averageexpense = "#{totalexpenses / 4}"
+

@@ -1,0 +1,25 @@
+# Параметры обработки изображений
+inputimage = "input.jpg"
+outputimage = "output.jpg"
+resizewidth = 800
+resizeheight = 600
+blurbase = 5
+sharpenfactor = 2
+
+#Далее приведены 3 таблицы:
+#1.Настройки фильтров
+#2.Параметры преобразования
+#3.Автоматическое улучшение
+
+[filters]
+blurradius = "#{blurbase + 3}"
+sharpenintensity = "#{2.5 * sharpenfactor}"
+
+[transformations]
+rotationangle = "#{90 / 2}"
+cropbox = [100, 100, 400, 400]
+
+[autoenhance]
+enabled = "true"
+contrast = "#{1.5 + 0.5}"
+brightness = "#{min(1.2, 1.0)}"

@@ -1,0 +1,31 @@
+-- Cписок покупок
+username is 'Dima'
+budget is 100
+(comment
+ Далее приведены 4 таблицы:
+ vegetables - овощи и их цена
+ fruits - фрукты и их цена
+ drinks - напитки и их цена
+ totals - итоговая сумма и остаток
+)
+vegetables is table([
+ tomatoes = 5,
+ potatoes = 10,
+ carrots = 3,
+ vegetablecost = 18
+])
+fruits is table([
+ apples = 4,
+ bananas = 6,
+ oranges = 8,
+ fruitcost = 18
+])
+drinks is table([
+ water = 6,
+ juice = 4,
+ drinkcost = 10
+])
+totals is table([
+ totalcost = 46,
+ remainingaftershopping = 54
+])

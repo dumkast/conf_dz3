@@ -6,7 +6,6 @@ class SyntaxError(Exception):
 
 global_context = {}
 
-# Чтение и запись TOML файлов с комментариями
 def read_write_toml(file_path, mode='r', lines=None):
     try:
         with open(file_path, mode) as file:
@@ -16,7 +15,6 @@ def read_write_toml(file_path, mode='r', lines=None):
     except Exception as e:
         raise SyntaxError(f"Ошибка при {mode} файла: {e}")
 
-# Оценка выражений
 def evaluate_expression(expression, context):
     try:
         context_with_min = {**context, "min": min}
@@ -24,18 +22,23 @@ def evaluate_expression(expression, context):
     except Exception as e:
         raise SyntaxError(f"Ошибка при вычислении выражения '{expression}': {e}")
 
-# Добавление данных в глобальный контекст
 def add_to_context(data, context):
     for key, value in data.items():
         if isinstance(value, dict):
             add_to_context(value, context)
         else:
-            context[key] = value
+            if isinstance(value, str) and value.startswith("#{") and value.endswith("}"):
+                result = evaluate_expression(value[2:-1].strip(), context)
+                context[key] = result
+            else:
+                context[key] = value
 
-# Преобразование значений в конфигурационный формат
 def convert_value(value, context=None):
     if isinstance(value, str):
-        return f"'{value}'" if not value.startswith("#{") else str(evaluate_expression(value[2:-1].strip(), context))
+        if value.startswith("#{") and value.endswith("}"):
+            return str(evaluate_expression(value[2:-1].strip(), context))
+        else:
+            return f"'{value}'"
     if isinstance(value, (int, float)):
         return str(value)
     if isinstance(value, list):
@@ -44,12 +47,10 @@ def convert_value(value, context=None):
         return "table([\n" + ",\n".join([f" {k} = {convert_value(v, context)}" for k, v in value.items()]) + "\n])"
     raise SyntaxError(f"Неподдерживаемое значение: {value}")
 
-# Преобразование TOML в формат учебного конфигурационного языка
 def convert_toml_to_custom_syntax(data, context):
     return [f"{key} is {convert_value(value, context)}" for key, value in data.items() if
             isinstance(value, (dict, list, str, int, float))]
 
-# Основная функция обработки файлов
 def process_files(input_file, output_file):
     lines = read_write_toml(input_file)
     try:
@@ -58,22 +59,22 @@ def process_files(input_file, output_file):
         raise SyntaxError(f"Ошибка при разборе TOML: {e}")
 
     add_to_context(data, global_context)
+
     converted_data = convert_toml_to_custom_syntax(data, global_context)
 
     output_lines, comment_block, data_index = [], [], 0
     for i, line in enumerate(lines):
         stripped_line = line.strip()
         if stripped_line.startswith("#"):
-            comment_block.append(stripped_line[1:].strip())  # Сохраняем комментарий без '#'
+            comment_block.append(stripped_line[1:].strip())
             if i + 1 == len(lines) or not lines[i + 1].strip().startswith("#"):
-                # Если комментариев больше одного, выводим многострочный комментарий
+
                 if len(comment_block) == 1:
-                    output_lines.append(f"-- {comment_block[0]}\n")  # Одиночный комментарий
+                    output_lines.append(f"-- {comment_block[0]}\n")
                 else:
-                    output_lines.append(f"(comment\n{''.join(f' {line}\n' for line in comment_block)})\n")  # Многострочный комментарий
+                    output_lines.append(f"(comment\n{''.join(f' {line}\n' for line in comment_block)})\n")
                 comment_block = []
         elif stripped_line.startswith("[") and "]" in stripped_line or stripped_line:
-            # Перед добавлением проверяем, не вышли ли за пределы списка converted_data
             if data_index < len(converted_data):
                 output_lines.append(f"{converted_data[data_index]}\n")
                 data_index += 1

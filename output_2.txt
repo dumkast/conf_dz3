@@ -1,0 +1,24 @@
+-- Анализ расходов
+username is 'Dima'
+totalincome is 3000
+totalsavings is 1500
+(comment
+ Таблица expenses - расходы по категориям
+ Таблица results - расчеты по расходам
+)
+expenses is table([
+ categories = << 'Housing', 'Food', 'Transportation', 'Entertainment' >>,
+ details = table([
+ housing = 1000,
+ food = 400,
+ transportation = 200,
+ entertainment = 150
+])
+])
+results is table([
+ totalexpenses = 1750,
+ remainingincome = 1250,
+ minsavings = 1250,
+ monthstosave = 0.2,
+ averageexpense = 437.5
+])
