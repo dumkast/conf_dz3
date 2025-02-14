@@ -1,3 +1,5 @@
+#Добавлен список использованных библиотек
+
 Проект Converter
 
 https://github.com/dumkast/conf_dz3
